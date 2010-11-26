@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<!DOCTYPE flinch SYSTEM "flinch.dtd">
+<flinch>
+  <config>
+    <reportdir> EDIT THIS </reportdir>
+    <reporturl> EDIT THIS </reporturl>
+    <timeout>90</timeout>
+    <stylesheet>/flinch-style.css</stylesheet>
+    <schemes>http ftp</schemes>
+    <email> EDIT THIS </email>
+  </config>
+</flinch>

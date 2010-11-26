@@ -1,0 +1,79 @@
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--   flinch.dtd                                                          -->
+<!--                                                                       -->
+<!--   http://www.remote.org/jochen/software/flinch/                       -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+
+<!ELEMENT flinch	(config,last?,skip*,link*) >
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--   The config section                                                  -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<!ELEMENT config	(email|prefix|project|reportdir|reportprefix|reporturl|schemes|startpath|stylesheet|timeout)* >
+<!ELEMENT email		(#PCDATA) >
+<!ELEMENT emailfrom	(#PCDATA) >
+<!ELEMENT prefix	(#PCDATA) >
+<!ELEMENT project	(#PCDATA) >
+<!ELEMENT reportdir	(#PCDATA) >
+<!ELEMENT reportprefix	(#PCDATA) >
+<!ELEMENT reporturl	(#PCDATA) >
+<!ELEMENT schemes	(#PCDATA) >
+<!ELEMENT startpath	(#PCDATA) >
+<!ELEMENT stylesheet	(#PCDATA) >
+<!ELEMENT timeout	(#PCDATA) >
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--   The last section                                                    -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<!ELEMENT last		(#PCDATA) >
+<!ATTLIST last		walk   CDATA #IMPLIED >
+<!ATTLIST last		check  CDATA #IMPLIED >
+<!ATTLIST last		report CDATA #IMPLIED >
+<!ATTLIST last		mail   CDATA #IMPLIED >
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--   The skip section                                                    -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<!ELEMENT skip		(#PCDATA) >
+<!ATTLIST skip		type	(prefix|suffix|regex|url) #REQUIRED >
+<!ATTLIST skip		action	(ignore|nofollow) "nofollow" >
+
+
+<!-- ===================================================================== -->
+<!--                                                                       -->
+<!--   The link section                                                    -->
+<!--                                                                       -->
+<!-- ===================================================================== -->
+<!ELEMENT link		(comment?,ref+,history?) >
+<!ATTLIST link		to      CDATA #REQUIRED >
+<!ATTLIST link		method  (HEAD|GET) "HEAD" >
+
+<!ELEMENT comment	(#PCDATA) >
+
+<!ELEMENT ref		(#PCDATA) >
+
+<!ELEMENT history	(result*) >
+<!ATTLIST history	keep	CDATA #IMPLIED >
+
+<!ELEMENT result	EMPTY >
+<!ATTLIST result	state    CDATA #REQUIRED >
+<!ATTLIST result	time     CDATA #REQUIRED >
+<!ATTLIST result	code     CDATA #IMPLIED >
+<!ATTLIST result	message  CDATA #IMPLIED >
+<!ATTLIST result	location CDATA #IMPLIED >
+<!ATTLIST result	duration CDATA #IMPLIED >
+<!ATTLIST result	lastmod  CDATA #IMPLIED >
+
+
+<!-- == THE END ========================================================== -->

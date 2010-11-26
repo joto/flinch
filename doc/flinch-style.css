@@ -1,0 +1,305 @@
+/*****************************************************************************
+
+  flinch-style.css
+
+  CSS Stylesheet for the Flinch link checker
+
+  $Id: flinch-style.css,v 1.2 2001/06/29 13:18:39 sqrt Exp $
+
+*****************************************************************************/
+
+
+body {
+  background-color: #063d56;
+  margin-right: 5%;
+  margin-left: 5%;
+}
+
+
+p,h1,h2,h3,div,td,th,b,i,ul,li,dt,dd,dl {
+  font-family: Helvetica,Arial,sans-serif;
+}
+
+
+tt {
+  font-family: monospace;
+}
+
+
+p,dl,dt,dd,ul,li,a {
+  color: #d0d0d0;
+}
+
+
+em {
+  color: #d6d319;
+  font-style: normal;
+}
+
+
+/*****************************************************************************
+
+  Headings
+
+*****************************************************************************/
+h1,h2,h3 {
+  color: #ffffff;
+}
+
+h1 {
+  font-size: x-large;
+  font-style: normal;
+  font-weight: bold;
+  text-align: center;
+  alignment: center;
+  padding: 2mm;
+}
+
+h2 {
+  font-size: large;
+  font-style: normal;
+  font-weight: normal;
+  margin-top: 5mm;
+}
+
+h3 {
+  font-size: medium;
+  font-style: normal;
+  font-weight: bold;
+  margin-top: 3mm;
+}
+
+
+/*****************************************************************************
+
+  Table of content
+
+*****************************************************************************/
+div.toc {
+  color: #063d56;
+  background-color: #a0a0a0;
+  text-align: center;
+  alignment: center;
+  border-width: thin;
+  border-style: solid;
+  border-color: #e0e0e0;
+  margin-right: 0%;
+  margin-left: 0%;
+  padding: 5mm;
+}
+
+div.toc h2 {
+  color: #063d56;
+  font-size: large;
+  font-style: normal;
+  font-weight: normal;
+  margin-top: 0mm;
+}
+
+div.toc ul {
+  color: #063d56;
+  align: left;
+  text-align: left;
+}
+
+div.toc ul li {
+  color: #063d56;
+  list-style: none;
+}
+
+div.toc a {
+  color: #063d56;
+}
+
+
+/*****************************************************************************
+
+  Command line examples
+
+*****************************************************************************/
+p.example {
+  font-family: monospace;
+  margin-left: 0%;
+  margin-right: 0%;
+  border-style: solid;
+  border-width: thin;
+  border-color: #ffffff;
+  padding: 2mm;
+  text-indent: 0mm;
+}
+
+
+/*****************************************************************************
+
+  XML examples
+
+*****************************************************************************/
+div.xml {
+  color: #063d56;
+  background-color: #a0a0a0;
+  margin-right: 0%;
+  margin-left: 0%;
+  margin-top: 0mm;
+  margin-bottom: 0mm;
+  border-width: thin;
+  border-style: solid;
+  border-color: #ffffff;
+  padding: 2mm;
+  white-space: pre;
+}
+
+div.xml b {
+  color: #000000;
+  font-weight: normal;
+}
+
+
+/*****************************************************************************
+
+  Unsorted rest
+
+*****************************************************************************/
+p.center {
+  color: #d0d0d0;
+  text-align: center;
+  alignment: center;
+}
+
+div.center {
+  text-align: center;
+  alignment: center;
+  border-width: thin;
+  border-style: solid;
+  border-color: #e0e0e0;
+  margin-bottom: 3mm;
+  margin-right: 0%;
+  margin-left: 0%;
+}
+
+
+div.back {
+  background-color: #063d56;
+}
+
+p.nav {
+  text-align: center;
+  alignment: center;
+  color: #ffffff;
+  margin-bottom: 0mm;
+  margin-top: 0mm;
+}
+
+a.nav {
+  color: #ffffff;
+}
+
+a.url {
+  color: #0000ff;
+}
+
+ul {
+  list-style-type: square;
+  text-align: left;
+  alignment: left;
+}
+
+ul.urllist li {
+  color: #000000;
+}
+
+ul.urllist a {
+  color: #0000ff;
+}
+
+th.main {
+  color: #063d56;
+  text-align: left;
+  alignment: left;
+  font-size: large;
+  font-style: normal;
+  font-weight: normal;
+  vertical-align: top;
+}
+
+table.history {
+  background-color: #063d56;
+}
+
+tr {
+  background-color: #a0a0a0;
+}
+
+td {
+  background-color: #e0e0e0;
+  text-align: left;
+  alignment: left;
+  vertical-align: top;
+}
+
+td.nav {
+  color: #ffffff;
+  background-color: #063d56;
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.ok {
+  background-color: #00dd00;		/* green */
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.intok {
+  background-color: #80dd80;
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.warn {
+  background-color: #eeee00;		/* yellow */
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.intwarn {
+  background-color: #eeee80;
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.error {
+  background-color: #ee0000;		/* red */
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.interror {
+  background-color: #ee8080;
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.unchecked {
+  background-color: #e0e0e0;		/* grey */
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+td.intunchecked {
+  background-color: #ffffff;
+  text-align: center;
+  alignment: center;
+  vertical-align: middle;
+}
+
+
+
+/** THE END *****************************************************************/

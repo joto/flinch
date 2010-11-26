@@ -1,0 +1,1079 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- $Id: flinch-doc.html,v 1.4 2001/08/04 09:43:38 sqrt Exp $ -->
+<html>
+  <head>
+    <title>Flinch link checker documentation</title>
+    <link href="flinch-style.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <h1>The <em>Flinch</em> link checker</h1>
+
+    <p class="center">
+      Version 1.0.5<br />
+      <a href="http://www.remote.org/jochen/software/flinch/">http://www.remote.org/jochen/software/flinch/</a><br />
+      by Jochen Topf<br />
+    </p>
+
+    <div class="toc">
+      <h2>Table of Contents</h2>
+      <ul>
+        <li> 0. <a href="#intro">Introduction</a></li>
+        <li> 1. <a href="#install">Installing Flinch</a></li>
+        <li> 2. <a href="#start">Starting Flinch</a></li>
+        <li> 3. <a href="#config">Configuration</a></li>
+        <li> 4. <a href="#init">Creating a new project</a></li>
+        <li> 5. <a href="#walk">Walking your site</a></li>
+        <li> 6. <a href="#check">Checking external links</a></li>
+        <li> 7. <a href="#report">Creating a HTML report</a></li>
+        <li> 8. <a href="#mail">Creating email reports</a></li>
+        <li> 9. <a href="#edit">Editing the project file</a></li>
+        <li>10. <a href="#reg">Running Flinch regularly</a></li>
+        <li>Appendix A. <a href="#xml">The XML files</a></li>
+        <li>Appendix B. <a href="#license">License</a></li>
+        <li>Appendix C. <a href="#dualhost">Using Flinch on two hosts</a></li>
+      </ul>
+    </div>
+
+    <a name="intro" id="intro"><h2>0. Introduction</h2></a>
+
+    <p>
+      <em>Flinch</em> is a powerful and flexible web link checker that will
+      make your life as a web designer or web server admin easier.
+      <em>Flinch</em> is implemented in
+      <a href="http://www.perl.org/">Perl</a> and released under the
+      <a href="#license">GPL</a> (GNU General Public License).
+      It can be used to check all the external links on your web pages
+      periodically and produce HTML reports of its findings. If a web
+      resource at the end of a link has not been reachable for a few days,
+      <em>Flinch</em> can send you an email.
+    </p>
+
+    <a name="install" id="install">
+      <h2>1. Installing <em>Flinch</em></h2>
+    </a>
+
+    <p>
+      <em>Flinch</em> needs the Perl modules <tt>XML::Generator</tt>,
+      <tt>XML::Parser::PerlSAX</tt>, <tt>HTML::LinkExtor</tt>,
+      <tt>LWP::UserAgent</tt>, <tt>URI</tt>, <tt>Digest::MD5</tt>, and
+      <tt>HTTP::Status</tt> from <a href="http://www.cpan.org/">CPAN</a>.
+      If you don't know which modules are installed on your system, it is
+      probably easiest to just start <em>Flinch</em> and then install all
+      the modules for which you get an error message.
+    </p>
+    <p>
+      To install <em>Flinch</em> you have to follow these steps:
+    </p>
+    <ul>
+      <li>Unpack the tar archive (<b>flinch-VERSION.tar.gz</b>)</li>
+      <li>Copy the programm <b>flinch</b> to somewhere in your path</li>
+      <li>The documentation is in the <b>doc</b> directory and consists
+          of a HTML file and a style sheet. You can copy them anywhere, but
+	  make sure that both files are in the same directory.</li>
+      <li>Create a directory <b>.flinch</b> in your HOME directory and
+          copy the file <b>example-config.xml</b> into it, renaming it to
+	  <b>config.xml</b>. Edit the file to suite your needs.</li>
+      <li>Create a new project as explained in
+          <a href="#init">chapter 4</a></li>
+   </ul>
+
+    <a name="start" id="start">
+      <h2>2. Starting <em>Flinch</em></h2>
+    </a>
+
+    <p>
+      <em>Flinch</em> is started from the command line, with the first
+      argument specifying the task Flinch should perform. The following
+      table shows the available tasks:
+    </p>
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Task</th>
+          <th>Description</th>
+          <th>See chapter</th>
+        </tr>
+        <tr>
+          <td>help</td>
+          <td>
+	    Print a short usage summary.
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>version</td>
+          <td>
+	    Print the version number.
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>init</td>
+          <td>
+	    Initialize a new project.
+          </td>
+          <td><a class="url" href="#init">Chapter 4</a></td>
+        </tr>
+        <tr>
+          <td>walk</td>
+          <td>
+	    Walk your web site to check all internal links and find all
+	    external links.
+          </td>
+          <td><a class="url" href="#walk">Chapter 5</a></td>
+        </tr>
+        <tr>
+          <td>check</td>
+          <td>
+	    Check all (or some) external links.
+          </td>
+          <td><a class="url" href="#check">Chapter 6</a></td>
+        </tr>
+        <tr>
+          <td>report</td>
+          <td>
+	    Create a HTML report for a project.
+          </td>
+          <td><a class="url" href="#report">Chapter 7</a></td>
+        </tr>
+        <tr>
+          <td>mail</td>
+          <td>
+	    Send mail reporting broken links.
+          </td>
+          <td><a class="url" href="#mail">Chapter 8</a></td>
+        </tr>
+        <tr>
+          <td>edit</td>
+          <td>
+	    Starts an editor on the project file.
+          </td>
+          <td><a class="url" href="#edit">Chapter 9</a></td>
+        </tr>
+        <tr>
+          <td>info</td>
+          <td>
+	    Read the config files and do nothing else. Used for debugging.
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr>
+          <td>recycle</td>
+          <td>
+	    Read the config files and write the project file back. Used
+	    for debugging.
+          </td>
+          <td>&nbsp;</td>
+        </tr>
+      </table>
+    </div>
+    <p>
+      For the <b>version</b> and <b>help</b> task, no other arguments are
+      needed on the command line. For all other tasks a project name must
+      be specified. In addition, some options can be given on the command
+      line. Some tasks have special options, but the following options are
+      interpreted by most tasks:
+    </p>
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Long/short option</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>--configdir=<i>dir</i>, -c <i>dir</i></td>
+          <td>
+	    Configuration directory that should be used instead of
+	    <b>~/.flinch</b>.
+          </td>
+        </tr>
+        <tr>
+          <td>--time=<i>hours</i>, -t <i>hours</i></td>
+          <td>
+	    Only run the task if the last run is more than <i>time</i>
+	    hours ago.
+          </td>
+        </tr>
+        <tr>
+          <td>--verbose, -v</td>
+          <td>
+	    Print verbose messages while doing the work.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <a name="config" id="config"><h2>3. Configuration</h2></a>
+
+    <p>
+      All the configuration for <em>Flinch</em> is read
+      from XML files. <em>Flinch</em> will look for
+      these files in in the <b>~/.flinch</b> directory by default. You can
+      change the directory with the <b>--configdir</b> (or&nbsp;<b>-c</b>)
+      option.
+    </p>
+    <p>
+      The main config file is called <b>config.xml</b>. Every set of web
+      pages that you want <em>Flinch</em> to check is called a <b>project</b>
+      and each projects configuration is stored in a <b>project file</b>,
+      named <b><i>PROJECT-NAME</i>.xml</b> in the same directory.
+    </p>
+    <p>
+      The project file is more than a config file:
+      When <em>Flinch</em> is running the <b>walk</b> and
+      <b>check</b> tasks it will add all the information gathered to the
+      project file. In addition, <em>Flinch</em> will note
+      the last time it ran the <b>walk</b>, <b>check</b>, <b>report</b> and
+      <b>mail</b> task to the file.
+    </p>
+    <p>
+      The main config file will only be read and never written to by
+      <em>Flinch</em>.
+    </p>
+    <p>
+      The main config and the project XML files can be edited at any time.
+      Subsequent runs of the program will read the changed information and
+      act accordingly.
+    </p>
+    <p>
+      Here is a complete list of all available configuration settings in
+      alphabetical order:
+    </p>
+
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Element</th>
+          <th>Default</th>
+          <th>Description</th>
+          <th>Which XML file?</th>
+        </tr>
+        <tr>
+          <td>email</td>
+	  <td>&nbsp;</td>
+          <td>
+	    The mail address where reports should be sent.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>emailfrom</td>
+	  <td>flinch@<i>HOSTNAME</i></td>
+          <td>
+	    The mail address used as sender for email reports.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>prefix</td>
+	  <td>&nbsp;</td>
+          <td>
+	    This is something like <tt>http://www.example.com/</tt> or
+	    <tt>http://www.example.org/~foo/bar</tt>. All web pages with this
+	    prefix will be recognized as local pages. All other web pages are
+	    external.
+          </td>
+          <td>project</td>
+        </tr>
+        <tr>
+          <td>project</td>
+	  <td>&nbsp;</td>
+          <td>
+	    This is the id of the project.
+          </td>
+          <td>project</td>
+        </tr>
+        <tr>
+          <td>reportdir</td>
+	  <td>&nbsp;</td>
+          <td>
+	    The directory where HTML reports are written. This can include
+	    the special string '%p' which will be replaced by the project
+	    name. Example: <tt>/var/www/flinch/%p</tt>
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>reportprefix</td>
+	  <td>&nbsp;</td>
+          <td>
+	    If this is set all local URLs in a report will have this prefix
+	    instead of the one set with <b>prefix</b>. Have a look at
+	    Appendix C to see why this might be useful.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>reporturl</td>
+	  <td>&nbsp;</td>
+          <td>
+	    This is the URL corresponding to the <b>reportdir</b> directory.
+	    It can include the special string '%p' which will be replaced
+	    by the project name.
+	    Example: <tt>http://localhost/flinch/%p</tt>
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>schemes</td>
+	  <td>http ftp</td>
+          <td>
+	    A space separated list of allowed URI schemes. Only resources
+	    with URIs in one of these schemes are checked. Generally, the
+	    default is what you want.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>startpath</td>
+	  <td>&nbsp;</td>
+          <td>
+	    This must be given relative to the prefix. It is the URL where
+	    Flinch should start crawling your web site to check all
+	    internal links and get the list of all external links. An example
+	    would be <tt>/index.html</tt> which would make the whole URL
+	    <tt>http://www.example.org/~foo/bar/index.html</tt> if the
+	    <b>prefix</b> was set to <tt>http://www.example.org/~foo/bar/</tt>.
+          </td>
+          <td>project</td>
+        </tr>
+        <tr>
+          <td>stylesheet</td>
+	  <td>flinch-style.css</td>
+          <td>
+	    The path to the style sheet. This is used as is from all the
+	    report files. Make sure you have a style sheet at that URI.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>timeout</td>
+	  <td>30</td>
+          <td>
+	    The timeout used when getting resources over the network. (In
+	    seconds.)
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>useragent</td>
+	  <td>Flinch/<i>VERSION</i></td>
+          <td>
+	    The content of the HTTP User-Agent Header used.
+          </td>
+          <td>config/project</td>
+        </tr>
+        <tr>
+          <td>warn</td>
+	  <td>3d</td>
+          <td>
+	    This is the warn interval after which broken links are reported.
+	    This value is only used by the <b>mail</b> task, not by the
+	    <b>report</b> task. The format used is a list of numbers and
+	    interval IDs like this: '4w3d5h3m2s' (4 weeks, 3 days, 6 hours,
+	    3 minutes and 2 seconds).
+          </td>
+          <td>config/project</td>
+        </tr>
+      </table>
+    </div>
+
+    <a name="init" id="init"><h2>4. Creating a new project</h2></a>
+
+    <p>
+      To create a new project call <em>Flinch</em> with the <b>init</b>
+      task:
+    </p>
+    <p class="example">
+      $ flinch init <i>project-name</i>
+    </p>
+    <p>
+      <em>Flinch</em> will then ask you a few questions
+      about the new project. The answers to these questions will be written
+      into a new project file named <b><i>PROJECT-NAME</i>.xml</b> in the
+      <em>Flinch</em> directory.
+    </p>
+    <p>
+      <em>Flinch</em> needs at least the following
+      information to create a new project:
+    </p>
+    <dl>
+      <dt>The project name</dt>
+      <dd>
+        If the project name was not given on the command line,
+	<em>Flinch</em> will ask for it. The project
+	name can only consist of lower case letters, numbers, the underscore
+	and the hyphen.
+	This will be stored in the <b>project</b> config variable.
+      </dd>
+      <dt>The prefix for all your web pages</dt>
+      <dd>
+        This is something like <tt>http://www.example.com/</tt> or
+	<tt>http://www.example.org/~foo/bar</tt>. All web pages with this
+	prefix will be recognized as local pages. All other web pages are
+	external.
+	This will be stored in the <b>prefix</b> config variable.
+      </dd>
+      <dt>The start URL</dt>
+      <dd>
+        This must be given relative to the prefix. It is the URL where
+	<em>Flinch</em> should start crawling your web
+	site to check all
+	internal links and get the list of all external links. An example
+	would be <tt>/index.html</tt> which would make the whole URL
+	<tt>http://www.example.org/~foo/bar/index.html</tt>.
+	This will be stored in the <b>starturl</b> config variable.
+      </dd>
+      <dt>Directory for the HTML report</dt>
+      <dd>
+        This is where all HTML report files will be stored. This directory
+        must exist. Example: <tt>/var/www/flinch/foo</tt>.
+	This will be stored in the <b>reportdir</b> config variable.
+      </dd>
+      <dt>URL for the HTML report directory</dt>
+      <dd>
+        This is the URL corresponding to the directory named in the last
+	step. Example: <tt>http://localhost/flinch/foo</tt>.
+	This will be stored in the <b>reporturl</b> config variable.
+      </dd>
+      <dt>Your email address</dt>
+      <dd>
+        Your email address is needed to send you reports.
+	This will be stored in the <b>email</b> config variable.
+      </dd>
+    </dl>
+    <p>
+      <em>Flinch</em> will offer a default value for some
+      options. Just press RETURN if you want to accept the default.
+    </p>
+    <p>
+      All the other configuration data will use defaults unless you
+      change the projects XML file to say different.
+    </p>
+    <p>
+      The last step in creating a new project is copying the
+      <b>flinch-style.css</b> CSS style sheet file into the report directory.
+      Otherwise the reports will look quite bland.
+    </p>
+
+
+    <a name="walk" id="walk"><h2>5. Walking your site</h2></a>
+
+    <p>
+      After setting up a new project the next step is to crawl your site
+      to find all your HTML pages and check all internal links. This can
+      be done with
+    </p>
+    <p class="example">
+      $ flinch walk <i>project-name</i>
+    </p>
+    <p>
+      You can and should repeat this step whenever your web pages change.
+    </p>
+    <p>
+      <em>Flinch</em> will report immediately if you have some internal
+      broken links, but it will not check external links at this step.
+      External links are only recorded in the project file. If you create
+      your web pages offline, on a notebook computer for instance, you can
+      still run this step, because no external pages will be accessed.
+    </p>
+    <p>
+      By default <em>Flinch</em> will check all internal links, i.e. it
+      will get all internal web pages, images, style sheets, etc. All resources
+      of type 'text/html' will be checked for internal links and these
+      links will be followed. You can use the &lt;skip&gt; element in the
+      project XML file to modify this behaviour on a URL-by-URL-basis. See
+      the <a href="#config">chapter on project configuration</a>.
+    </p>
+    <p>
+      Note that <em>Flinch</em> does <b>not</b> respect a <b>robots.txt</b>
+      file on the site you are crawling, because, as a rule, the
+      <b>robots.txt</b> file is designed to protect you from foreign
+      robots, not necessarily from your own. <em>Flinch</em> is designed for
+      use on your own site, where you hopefully know what you are doing.
+      Use the &lt;skip&gt; element in the projects file, if you want to
+      block parts of your site like CGIs or other dynamic content.
+      <b>Don't crawl foreign sites with <em>Flinch</em> without the
+      permission of the owner!</b>
+    </p>
+    <p>
+      If <em>Flinch</em> is interrupted by a signal while walking your site,
+      the project XML file is not written.
+    </p>
+
+
+    <a name="check" id="check"><h2>6. Checking external links</h2></a>
+
+    <p>
+      After crawling your site, and periodically thereafter, you should check
+      all external links by calling <em>Flinch</em> as follows:
+    </p>
+    <p class="example">
+      $ flinch check <i>project-name</i>
+    </p>
+    <p>
+      When called with the <b>check</b> task, <em>Flinch</em> will
+      loop over all external links and try to get the named resources. With
+      the following options you can restrict which links should be checked.
+    </p>
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Long/short option</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>--head, -h</td>
+          <td>
+	    Force usage of HEAD request, even if a HEAD request failed
+	    before. If you started a check when your Internet connection
+	    was down and all checks failed, all links will be marked
+	    "don't try a HEAD request next time". This option will clear
+	    this condition.
+          </td>
+        </tr>
+        <tr>
+          <td>--level=<i>level</i>, -l <i>level</i></td>
+          <td>
+	    Only check links in one of the levels given. Possible values
+	    are 'unchecked', 'ok', 'warn', 'error' or a comma separated
+	    list of these.
+          </td>
+        </tr>
+        <tr>
+          <td>--state=<i>state</i>, -s <i>state</i></td>
+          <td>
+            Comma separated list of states. Only check links in one of
+	    the states given. For a list of possible values see
+	    <a class="url" href="#report">the chapter on creating HTML
+	    reports</a>.
+          </td>
+        </tr>
+        <tr>
+          <td>--url=<i>URL</i>, -u <i>URL</i></td>
+          <td>
+     	    Only check URLs matching this pattern.
+          </td>
+        </tr>
+      </table>
+    </div>
+    <p>
+      For instance,
+    </p>
+    <p class="example">
+      $ flinch check -l error <i>project-name</i>
+    </p>
+    <p>
+      will only check links that had some error the last time they were
+      checked.
+    </p>
+    <p>
+      The result of the check will be written to a &lt;result&gt; element
+      in the project XML file. Various information, like the time the
+      check was performed, the HTTP return code, etc. will be stored in the
+      attributes of the &lt;result&gt; element.
+    </p>
+    <p>
+      Together, all the &lt;result&gt; elements for a link make up its
+      <b>history</b>. The history is kept in the XML file. By default the
+      history is only kept back to the last time a positive response was
+      received. This can be changed with the <b>keep</b> attribute to
+      the &lt;history&gt; element.
+    </p>
+    <p>
+      Each check will first be tried with the HEAD method. If the check
+      fails, a GET request will be used. Unfortunately many servers
+      return bogus error messages when the HEAD method is used, so we have to
+      try GET. <em>Flinch</em> will keep track of all
+      servers where the HEAD request failed and use a GET request directly
+      the next time the link is checked.
+    </p>
+    <p>
+      If <em>Flinch</em> is interrupted by a signal while checking the
+      external links, the project XML file is written with the current status,
+      i.e. some of the links will have a new check entry and some don't. If
+      a SIGHUP is received, the current state is written to the project XML
+      file and the checking continues. Note that it might take a moment for
+      the signal to register, because a currently running check of a link
+      is not interrupted.
+    </p>
+
+    <a name="report" id="report"><h2>7. Creating a HTML report</h2></a>
+
+    <p>
+      To create a HTML report from the current state of the XML file, use
+      the <b>report</b> task. The report consists of an overview page
+      and, for every external link, a page with all the details. If the
+      option <b>--short</b> is used, a short report will be generated
+      containing only links not in the 'ok' state.
+    </p>
+    <p>
+      The overview will show a list of all external links, the date the
+      last check for this links was performed, the result of that check,
+      the URL and a <b>Details</b> link to open the detailed information for
+      this link.
+    </p>
+    <p>
+      Here is a list of states a link can be in:
+    </p>
+
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>State</th>
+          <th>Description</th>
+          <th>HTTP return code</th>
+        </tr>
+        <tr>
+          <td class="error">FORBIDDEN</td>
+          <td>
+            You don't have permission to get this resource.
+            You should fix the link immediately.
+          </td>
+          <td>403</td>
+        </tr>
+        <tr>
+          <td class="error">NOT AUTH</td>
+          <td>
+            You don't have permission to get this resource.
+            You should fix the link immediately.
+          </td>
+          <td>401</td>
+        </tr>
+        <tr>
+          <td class="error">NOT FOUND</td>
+          <td>
+            The resource was not found. You should fix the link immediately.
+          </td>
+          <td>404</td>
+        </tr>
+        <tr>
+          <td class="error">TIMEOUT</td>
+          <td>
+            A timeout occurred while getting the resource. This is probably
+            a temporary error. Some other errors like 'no route to host'
+	    will also be reported as a TIMEOUT.
+          </td>
+          <td>503, 504, ...</td>
+        </tr>
+        <tr>
+          <td class="error">EMPTY</td>
+          <td>
+	    The resource is empty. You should fix the link immediately.
+          </td>
+          <td>204</td>
+        </tr>
+        <tr>
+          <td class="error">DNS</td>
+          <td>
+	    A DNS lookup failed.
+          </td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td class="error">ERROR</td>
+          <td>
+            Some other error occurred. Check the information on the details
+            page.
+          </td>
+          <td>4xx, 5xx</td>
+        </tr>
+        <tr>
+          <td class="error">UNKNOWN</td>
+          <td>
+	    Something, for which the application was not prepared, happened.
+	    This is probably a bug in Flinch. Please report this to the
+	    author.
+          </td>
+          <td>N/A</td>
+        </tr>
+        <tr>
+          <td class="warn">MULTI</td>
+          <td>
+	    There are multiple resources behind this link.
+          </td>
+          <td>300</td>
+        </tr>
+        <tr>
+          <td class="warn">MOVED</td>
+          <td>
+            The resource has moved permanently. The link should be updated.
+          </td>
+          <td>301, 410</td>
+        </tr>
+        <tr>
+          <td class="ok">REDIRECT</td>
+          <td>
+            The resource has moved temporarily. You have to check this
+	    manually. Sometimes it is perfectly normal, for instance some
+	    web sites make up a session id on the fly and send you a redirect
+	    with this session id. Sometimes the page really has moved and
+	    you should fix it.
+          </td>
+          <td>302</td>
+        </tr>
+        <tr>
+          <td class="ok">OK</td>
+          <td>
+            This link is ok.
+          </td>
+          <td>200</td>
+        </tr>
+        <tr>
+          <td class="unchecked">UNCHECKED</td>
+          <td>
+            This link hasn't been checked yet.
+          </td>
+          <td>N/A</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>
+      The <b>Link details</b> page will show the following information:
+    </p>
+    <ul>
+      <li>The checked URL</li>
+      <li>A history of recent check results for this URL</li>
+      <li>The time this URL was last modified</li>
+      <li>A list of links to all the pages on your site with a link to the
+          checked URL</li>
+      <li>A list of similar URLs to the one that was checked. This list is
+          automatically generated using some simple heuristics. If a URL
+          has moved, it is often useful to try these URLs to find the
+          new URL.</li>
+    </ul>
+    <p>
+      The check history will contain the following information:
+    </p>
+    <ul>
+      <li>The date and time of the check</li>
+      <li>The duration of the request</li>
+      <li>The result of this check</li>
+      <li>The HTTP response code (if available)</li>
+      <li>A text message explaining what happened</li>
+      <li>The new URL of the resource (if it has moved)</li>
+    </ul>
+    <p>
+      If <em>Flinch</em> is interrupted by a signal while writing the report
+      the report will be incomplete.
+    </p>
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Long/short option</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>--short, -s</td>
+          <td>
+	    Generate short report. 'OK' links are not included.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+
+    <a name="mail" id="mail"><h2>8. Creating email reports</h2></a>
+
+    <p>
+      Using the <b>mail</b> task, <i>flinch</i> can send emails telling you
+      about broken links. Call <i>flinch</i> as follows.
+    </p>
+    <p class="example">
+      $ flinch mail <i>project-name</i>
+    </p>
+    <p>
+      This will only send you email if there is anything to report. Use
+      the <b>--force</b> option if you want to get an email in any case.
+    </p>
+    <div class="center">
+      <table cellpadding="4" border="0" cellspacing="1" width="100%">
+        <tr>
+          <th>Long/short option</th>
+          <th>Description</th>
+        </tr>
+        <tr>
+          <td>--force, -f</td>
+          <td>
+	    Send a mail even if there is nothing to report.
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <a name="edit" id="edit"><h2>9. Editing the project file</h2></a>
+
+    <p>
+      You can edit the project XML file whenever you want. Changes will
+      be reflected the next time you run <em>Flinch</em>.
+      To make your life a little bit easier, you can call
+      <em>Flinch</em> as follows to edit a projects file:
+    </p>
+    <p class="example">
+      $ flinch edit <i>project-name</i>
+    </p>
+    <p>
+      This will open an editor and load the project file into it.
+      <em>Flinch</em> will use the content of the
+      <b>XMLEDITOR</b> or,
+      if not found, the content of the <b>EDITOR</b> environment variable
+      to decide which editor to start. If both variables are not set,
+      <b>vi</b> will be started.
+    </p>
+
+    <a name="reg" id="reg"><h2>10. Running <em>Flinch</em> regularly</h2></a>
+
+    <p>
+      Most people want to run the <b>check</b> and <b>mail</b> tasks
+      regularly and automatically by <b>cron</b>. On the other hand,
+      <b>cron</b> might be too regular - you might just hit a web site's
+      maintenance interval every day and thus get the impression that the
+      page is "always down" when in fact it is only down for five minutes
+      a day.  To work around this, you can use the <b>--time</b> option
+      of <em>Flinch</em>:
+    </p>
+    <p>
+      Call <em>Flinch</em> every hour from <b>cron</b>, but use e.g.
+      <b>--time=21</b> to request it run every 21 hours. <em>Flinch</em>
+      will be started every hour, but if less than 21 hours have elapsed
+      since it last ran it will quit immediately. The effect is, that the
+      real check time will be different every day.
+    </p>
+    <p>
+      The <b>walk</b> task should be run whenever your web pages change. The
+      <b>report</b> task can either be run regularly after the <b>check</b>
+      task or whenever you want to have a look at the HTML report.
+    </p>
+
+    <a name="xml" id="xml"><h2>Appendix A. The XML files</h2></a>
+
+    <p>
+      For some "advanced" configuration you have to edit the XML files. This
+      is not as difficult as it might seem, as the file format is mostly
+      self-explanatory. This appendix will explain the details.
+    </p>
+    <p>
+      The is a DTD (<b>flinch.dtd</b>) included in the distribution, but
+      <em>Flinch</em> currently does not use a validating parser.
+    </p>
+    <p>
+      The XML config and project files have a similar layout. Both use the
+      same DTD (<b>flinch.dtd</b>) and have &lt;flinch&gt; as the root
+      element. Here is the general layout:
+    </p>
+
+    <div class="xml">
+  &lt;?xml version="1.0"?&gt;
+  &lt;!DOCTYPE flinch SYSTEM "flinch.dtd"&gt;
+  &lt;flinch&gt;
+    &lt;config&gt;
+      ...
+    &lt;/config&gt;
+    &lt;last ... /&gt;
+    &lt;skip&gt;
+      ...
+    &lt;/skip&gt;
+    ...
+    &lt;link&gt;
+      ...
+    &lt;/link&gt;
+    ...
+  &lt;/flinch&gt;
+    </div>
+
+    <p>
+      The &lt;config&gt; section appears in both the main config file and
+      the project files. All other sections can only exist in the project
+      files. The &lt;skip&gt; and the &lt;link&gt; elements can be repeated
+      as often as needed.
+    </p>
+
+    <h3>A.1 The &lt;config&gt; element</h3>
+
+    <p>
+      Both the <b>config.xml</b> and the project files contain a
+      &lt;config&gt; section. The <b>config.xml</b> file sets the defaults
+      for some config variables, the project files can overwrite settings
+      and add new ones.
+    </p>
+    <p>
+      The &lt;config&gt; section generally looks like this:
+    </p>
+
+    <div class="xml">
+  &lt;config&gt;
+    &lt;timeout&gt;<b>30</b>&lt;/timeout&gt;
+    &lt;schemes&gt;<b>http ftp</b>&lt;/schemes&gt;
+    &lt;project&gt;<b>foo</b>&lt;/project&gt;
+    &lt;prefix&gt;<b>http://www.example.com/foo</b>&lt;/prefix&gt;
+    ...
+  &lt;/config&gt;
+    </div>
+    <p>
+      See <a href="#config">the configuration section</a> for a list of
+      config elements.
+    </p>
+
+
+    <h3>A.2 The &lt;last&gt; element</h3>
+
+    <p>
+      <em>Flinch</em> uses the &lt;last&gt; element
+      to store the times it last ran the <b>walk</b>, <b>check</b>,
+      <b>report</b> and <b>mail</b> tasks. This is needed for the
+      <tt>--time</tt> option to work. The time is given in seconds since
+      the epoch (1970-01-01 00:00:00 UTC). The element looks like this:
+    </p>
+    <div class="xml">
+  &lt;last mail="<b>993676544</b>" report="<b>993647646</b>" check="<b>993677548</b>" walk="<b>993671490</b>" /&gt;
+    </div>
+
+    <h3>A.3 The &lt;skip&gt; element</h3>
+
+    <p>
+      &lt;skip&gt; elements can be used to restrict which pages <em>Flinch</em>
+      will access. The <b>type</b> attribute ('prefix', 'suffix', 'regex',
+      'url') together with the content of the &lt;skip&gt; element specifies
+      which URLs should be excluded. If the 'suffix' attribute is used,
+      everything after an optional '?' in the URL is ignored.
+    </p>
+    <p>
+      The <b>action</b> attribute specifies which action to take if the
+      URL matches. An action of <tt>ignore</tt> means not to get the
+      resource. <tt>nofollow</tt> means that the resource should be checked,
+      but links on the page should not be followed. <tt>nofollow</tt> is
+      the default.
+    </p>
+    <p>
+      A few examples:
+    </p>
+
+    <div class="xml">
+  &lt;skip action="<b>nofollow</b>" type="<b>suffix</b>"&gt;<b>.shtml</b>&lt;/skip&gt;
+  &lt;skip action="<b>ignore</b>" type="<b>prefix</b>"&gt;<b>http://www.example.org/</b>&lt;/skip&gt;
+  &lt;skip type="<b>url</b>"&gt;<b>http://www.example.com/cgi-bin/test.cgi</b>&lt;/skip&gt;
+    </div>
+
+    <h3>A.3 The &lt;link&gt; element</h3>
+
+    <p>
+      For each external link that <em>Flinch</em> encountered in the
+      <b>walk</b> phase, there is a &lt;link&gt; element in the project
+      file. The <b>to</b> attribute contains the URL of the link's
+      destination. For every local URL that has a link to the external
+      URL, there is a &lt;ref&gt; element. The responses to the last
+      checks are stored in the &lt;history&gt; elements described in the
+      next section.
+    </p>
+
+    <div class="xml">
+  &lt;link to"<b>http://www.example.com/</b>"&gt;
+    &lt;ref&gt;<b>http://localhost/example.html</b>&lt;/ref&gt;
+    &lt;ref&gt;<b>http://localhost/another.html</b>&lt;/ref&gt;
+    &lt;history&gt;
+      ...
+    &lt;/history&gt;
+  &lt;/link&gt;
+    </div>
+
+    <h3>A.4 The &lt;history&gt; element</h3>
+
+    <p>
+      The &lt;history&gt; element and its sub-elements are used to save the
+      responses
+      to the last checks. By default all responses up to the last successful
+      response will be stored. The <b>keep</b> attribute of the
+      &lt;history&gt; element can be used to configure a maximum number of
+      responses to keep. Setting this to <b>"0"</b> or not setting it at all
+      will result in the default behaviour.
+    </p>
+    <p>
+      Here is an example history section:
+    </p>
+    <div class="xml">
+  &lt;history keep="<b>8</b>"&gt;
+    &lt;check state="<b>timeout</b>" message="<b>Can't connect to www.example.com:80 (Timeout)</b>" time="<b>993328622</b>" /&gt;
+    &lt;check state="<b>redirect</b>" location="<b>http://www.example.net/</b>" code="<b>302</b>" time="<b>993328382</b>" /&gt;
+    &lt;check state="<b>ok</b>" code="<b>200</b>" time="<b>993288402</b>" duration="<b>0.3</b>" lastmod="<b>993278402</b>" /&gt;
+  &lt;/history&gt;
+    </div>
+    <p>
+      Here <b>time</b> is the time in seconds since the epoch (1970-01-01
+      00:00:00 UTC) when the check was performed. <b>state</b> is the state
+      of this check. The HTTP response code is stored in <b>code</b>. The
+      <b>location</b> attribute is used to store a new location for a
+      <b>redirect</b> response. If there is any user readable message, it
+      is supplied in <b>message</b>. The duration of the request in seconds
+      is stored in <b>duration</b>. If the server supplied a Last-Modified
+      header, the time is stored in <b>lastmod</b>.
+    </p>
+
+    <a name="license" id="license">
+      <h2>Appendix B. License</h2>
+    </a>
+
+    <p>
+      Copyright &copy; 2001 by Jochen Topf &lt;jochen@remote.org&gt;
+    </p>
+    <p>
+      This program is free software; you can redistribute it and/or modify
+      it under the terms of the GNU General Public License as published by
+      the Free Software Foundation; either version 2 of the License, or
+      (at your option) any later version.
+    </p>
+    <p>
+      This program is distributed in the hope that it will be useful,
+      but WITHOUT ANY WARRANTY; without even the implied warranty of
+      MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+      GNU General Public License for more details.
+    </p>
+    <p>
+      You should have received a copy of the GNU General Public License
+      along with this program; if not, write to the Free Software
+      Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA
+    </p>
+
+    <a name="dualhost" id="dualhost">
+      <h2>Appendix C. Using <em>Flinch</em> on two hosts</h2>
+    </a>
+
+    <p>
+      Some people are editing their web pages not on the web server itself,
+      but on a different system. Only when the pages are finished they are
+      moved to the real server. <em>Flinch</em> can handle this situation,
+      because the check can be run on a different computer from the one
+      where the report is generated.
+    </p>
+    <p>
+      To set this up do the following: Install <em>Flinch</em> on both
+      computers. On the real web server (S) create the config files as
+      described in <a href="#config">Chapter 3</a> and <a href="#init">4</a>.
+      The <b>reporturl</b> and <b>reportdir</b> configuration options should
+      point to the computer you do the editing on (E).
+    </p>
+    <p>
+      Edit the project XML file and add the config option <b>reportprefix</b>.
+      It should point to the place on host E where you are testing your
+      pages. It should similar to this:
+    </p>
+    <div class="xml">
+    &lt;config&gt;
+      &lt;prefix&gt;http://www.realserver.com&lt;/prefix&gt;
+      &lt;reportprefix&gt;http://at.home.com/test&lt;/reportprefix&gt;
+      &lt;reporturl&gt;http://at.home.com/flinch-report&lt;/reporturl&gt;
+      &lt;reportdir&gt;/var/www/flinch-report&lt;/reporturl&gt;
+    &lt;/config&gt;
+    </div>
+    <p>
+      Now copy the <tt>config.xml</tt> file to your editing host (E).
+      Run the <b>walk</b>, <b>check</b> and <b>mail</b> phases on Host S.
+      Whenever you need a report copy the project XML file from S to E
+      and run <em>Flinch</em> there to generate the report. All the links
+      in the report will point to your test pages on E, not to the real
+      pages on S.
+    </p>
+
+  </body>
+</html>

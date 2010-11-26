@@ -1,0 +1,44 @@
+
+Flinch ChangeLog
+----------------
+
+1.0.6 2008-05-03
+  Modifications by Peter Kleiweg:
+	* option -v as incremental: -v -v lists LINK on check
+	* sorting of report: first by State, second by Link
+	* treat dead internal links as external links, display in pink at top of report
+
+1.0.5 [released 2001-12-10]
+  * workaround from 1.0.4 didn't work everywhere. Flinch has been changed
+    to not use Digest::MD5 any more which should solve the problem once and
+    for all.
+
+1.0.4 [released 2001-12-09]
+  * workaround for a bug in older Perl/newer Digest::MD5 versions
+  * Check return code of close for XML files to detect errors that would
+    result in loss of config files
+  * New option --short for report generation which excludes 'ok' links from
+    report
+
+1.0.3
+  * New reportprefix config option used when running walk and report phase
+    on different hosts. See documentation
+  * Flinch will now note the duration a request takes and show it in the
+    report.
+  * Some cosmetic changes to the report and mail
+  * When using the skip function with suffix match, everything in a URL
+    after the first ? is ignored
+  * Last-modified header is saved in 'lastmod' element and the report will
+    print the last modified time.
+
+1.0.2
+  * Some small bugfixes. Flinch should never die while getting web pages.
+
+1.0.1
+  * fixed small bug that would print some internal Perl hex code as a removed
+    orphaned link
+  * new --head option to force useing HEAD requests for all links
+
+1.0.0 [released 2001-06-29]
+  * first release
+

@@ -1,0 +1,29 @@
+
+Flinch TODO
+-----------
+
+- report for walk phase?
+- use -w option?
+- cookie support?
+  I needed cookies so I added the following line:
+
+  use HTTP::Cookies;
+  sub init_user_agent {
+    $ua->cookie_jar(HTTP::Cookies->new);
+  }
+- interne links auch checken und per mail reporten?
+- optionally warn if documents have changed
+- user/pass support
+- timeout should be in 3m4s format
+- handling for 300/multi and 406/not acceptable is unclear
+- optionally respect robots.txt
+- there should be a manual override for the level. i.e. redirects which are
+  really ok, should be marked as such
+- create config.xml if it is not there in init task
+- document home/remote use
+- applet code= do the right thing if jar file is used
+- maybe check mailto links? https links?
+- save context (especially stuff between <a> and </a>) for references
+  maybe line numbers for source code
+- check page contents for major changes
+

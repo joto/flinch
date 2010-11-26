@@ -1,0 +1,21 @@
+
+The Flinch link checker
+-----------------------
+
+Version 1.0.5
+
+http://www.remote.org/jochen/software/flinch/
+
+Written by Jochen Topf <jochen@remote.org>
+
+Flinch is a powerful and flexible web link checker that will make your life
+as a web designer or web server admin easier. Flinch is implemented in Perl
+and released under the GPL (GNU General Public License). It can be used to
+check all the external links on your web pages periodically and produce HTML
+reports of its findings. If a web resource at the end of a link has not been
+reachable for a few days, Flinch can send you an email. 
+
+For installation instructions see the HTML documentation in the doc directory.
+
+Send bug reports, questions etc. to the mailing list at <flinch@remote.org>.
+
