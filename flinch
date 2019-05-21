@@ -584,7 +584,7 @@ sub http_check {
   } else {
     print "  => $type: ", $response->code(), " [${duration}s]\n" if ($opts{'verbose'});
     my $result = Flinch::Result->new('code' => $response->code(), 'duration' => $duration, 'lastmod' => $response->last_modified());
-    if (($response->code() >= 301) && ($response->code() <= 303)) {
+    if ((($response->code() >= 301) && ($response->code() <= 303)) || ($response->code() == 308)) {
       $result->set_location($response->header('Location'));
     }
     return $result;
@@ -1669,6 +1669,7 @@ sub code2state {
   return 'multi'     if ($code == 300);		# 300 multiple choices
   return 'moved'     if ($code == 301);		# 301 permanent redirect
   return 'redirect'  if ($code == 302);		# 302 temporary redirect
+  return 'moved'     if ($code == 308);		# 308 permanent redirect
   return 'not auth'  if ($code == 401);		# 401 unauthorized
   return 'forbidden' if ($code == 403);		# 403 forbidden
   return 'not found' if ($code == 404);		# 404 not found
