@@ -1277,7 +1277,8 @@ sub html_overview {
 			{'href' => $u, 'class' => 'url' },
 			$ux
 			),
-		($ux eq $u) ? "" : "..."
+		($ux eq $u) ? "" : "...",
+        ($self->get_history()->get_location() eq '') ? '' : ' => ' . $self->get_history()->get_location()
   	),
   );
 }
@@ -1535,6 +1536,13 @@ sub get_state {
   my ($self) = @_;
   my $f = $self->get_list()->[0];
   return $f ? $f->get_state() : "unchecked";
+}
+
+
+sub get_location {
+  my ($self) = @_;
+  my $f = $self->get_list()->[0];
+  return $f ? $f->{'location'} : ''
 }
 
 
