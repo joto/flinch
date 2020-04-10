@@ -63,7 +63,7 @@ chomp $HOSTNAME;
 my $cfg = Flinch::Config->new(
     'stylesheet'   => 'flinch-style.css',
     'timeout'      => 60,
-    'schemes'      => 'http ftp',
+    'schemes'      => 'http https',
     'useragent'    => "$PROGRAM/$VERSION",
     'warn'         => '3d',
     'emailfrom'    => 'flinch@' . $HOSTNAME,
