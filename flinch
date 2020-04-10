@@ -96,7 +96,7 @@ my %failed = ();
 #-----------------------------------------------------------------------------
 {
     my %subcommands = map { $_ => 1 }
-        qw(check edit help info init mail recycle report walk version);
+        qw(check clean edit help info init mail recycle report walk version);
 
     my $sc = shift;
 
@@ -196,6 +196,7 @@ Subcommands are:
   mail     send mail with warnings
   report   output a HTML report
   edit     edit XML config file
+  clean    clean project file history
   help     print this help text
   version  print version
 
@@ -235,6 +236,26 @@ sub do_info {
 #-----------------------------------------------------------------------------
 sub do_recycle {
     standard_init();
+    write_project_xml();
+}
+
+
+#-----------------------------------------------------------------------------
+#
+#  do_clean()
+#
+#  This function reads the XML file, parses it and writes it back. It is
+#  mainly used for testing.
+#
+#-----------------------------------------------------------------------------
+sub do_clean {
+    standard_init();
+
+    print "Cleaning history...\n" if ($opts{'verbose'});
+    foreach my $link (Flinch::ExternLink->get_list()) {
+        $link->get_history()->clean();
+    }
+
     write_project_xml();
 }
 
@@ -1471,6 +1492,14 @@ sub is_empty { return ! defined $_[0]->get_list()->[0]; }
 sub set_list {
     my ($self, $list) = @_;
     return $self->[HISTORY_LIST] = $list;
+}
+
+sub clean {
+    my ($self) = @_;
+    my @list = @{$self->get_list()};
+    if ($#list > 2) {
+        $self->set_list([$list[0], $list[-1]]);
+    }
 }
 
 sub set_keep {
