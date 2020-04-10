@@ -1972,7 +1972,7 @@ sub head {
         $self->xmlcmnt($AD_TEXT),
         $self->title(@content),
         $self->meta( { 'http-equiv' => 'content-type',
-                       'content'    => 'text/html; charset=iso-8859-1' } ),
+                       'content'    => 'text/html' } ),
         $self->meta( { 'http-equiv' => 'expires',
                        'content'    => '0' } ),
         $self->meta( { 'http-equiv' => 'pragma',
