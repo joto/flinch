@@ -707,6 +707,15 @@ sub do_report {
                 sort { $b->[3] <=> $a->[3] or $a->[1]->cmp($b->[1]) or $a->[2] cmp $b->[2] }
                 map { [ $_, $_->get_history(), $_->get_url(), $_->get_internal() ] } @ext_list;
 
+    my %state_count;
+    for my $state (map { uc($_->get_history()->get_state()) } @ext_list) {
+        $state_count{$state}++;
+    }
+
+    my @stats = map { $xml->span({ 'class' => 'stat' }, $_ . ": " . $state_count{$_}) }
+                sort { $state_count{$b} <=> $state_count{$a} }
+                keys %state_count;
+
     my $body = $xml->body(
         $xml->h1($xml->em("Flinch"), " report: Overview"),
         $xml->h1("Project: " . $cfg->get_project()),
@@ -721,6 +730,7 @@ sub do_report {
                 @links
             ),
         ),
+        $xml->p({ 'class' => 'center' }, @stats),
         $xml->p({ 'class' => 'center' }, $AD_TEXT),
         $xml->p({ 'class' => 'center' }, isodate(time())),
         $xml->p({ 'class' => 'center' }, $xml->a({ 'href' => $AD_URL, 'class' => 'nav' }, $AD_URL),

@@ -300,6 +300,14 @@ td.intunchecked {
   vertical-align: middle;
 }
 
+span.stat {
+  border: 1px solid #808080;
+  border-radius: 3px;
+  padding-left: 2px;
+  padding-right: 2px;
+  margin-left: 4px;
+  margin-right: 4px;
+}
 
 
 /** THE END *****************************************************************/
