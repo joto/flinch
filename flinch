@@ -1224,6 +1224,13 @@ sub similar {
 
     my @r;
 
+    # try with https
+    if ($url->scheme eq 'http') {
+        my $https_url = $url->clone();
+        $https_url->scheme('https');
+        push(@r, $https_url->as_string());
+    }
+
     # try with path components
     my @seg = $url->path_segments();
     foreach my $n (0 .. $#seg) {
