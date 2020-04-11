@@ -555,6 +555,19 @@ sub do_check {
                 $result = http_check($ua, 'GET', $link, $headers);
             }
         }
+
+        if ($result->get_state() eq 'ok' && $link->get_url()->as_string() =~ /^http:/) {
+            my $https_link = $link->get_url()->as_string();
+            $https_link =~ s/^http:/https:/;
+            print "Link was okay, checking HTTPS version ", $https_link, "\n" if ($opts{'verbose'});
+            my $response = http_request($ua, 'HEAD', $https_link, $headers);
+            if ($response && ($response->code() == 200 || code_is_redirect($response->code()))) {
+                print "Response was ", $response->code(), ", setting state to 'http'\n" if ($opts{'verbose'});
+                $result->set_state('http');
+                $result->set_location($https_link);
+            }
+        }
+
         $link->get_history()->add($result);
 
         if ($got_signal_int) {
@@ -573,16 +586,30 @@ sub do_check {
 }
 
 
-sub http_check {
-    my ($ua, $type, $link, $headers) = @_;
+sub http_request {
+    my ($ua, $type, $url, $headers) = @_;
 
-    my $t0 = [gettimeofday()];
-    my $request = eval { HTTP::Request->new($type, $link->get_url(), $headers); };
+    my $request = eval { HTTP::Request->new($type, $url, $headers); };
 
     my $response;
     if (! $@) {
         $response = eval { $ua->simple_request($request); };
     }
+
+    return $response;
+}
+
+sub code_is_redirect {
+    my ($code) = @_;
+
+    return (($code >= 301) && ($code <= 303)) || ($code == 308);
+}
+
+sub http_check {
+    my ($ua, $type, $link, $headers) = @_;
+
+    my $t0 = [gettimeofday()];
+    my $response = http_request($ua, $type, $link->get_url(), $headers);
     my $duration = tv_interval($t0, [gettimeofday()]);
     $duration = int($duration*100)/100;
 
@@ -604,7 +631,7 @@ sub http_check {
     } else {
         print "  => $type: ", $response->code(), " [${duration}s]\n" if ($opts{'verbose'});
         my $result = Flinch::Result->new('code' => $response->code(), 'duration' => $duration, 'lastmod' => $response->last_modified());
-        if ((($response->code() >= 301) && ($response->code() <= 303)) || ($response->code() == 308)) {
+        if (code_is_redirect($response->code())) {
             $result->set_location($response->header('Location'));
         }
         return $result;
@@ -1632,7 +1659,7 @@ BEGIN {
         'forbidden', 'not auth', 'not found', 'empty',
         'dns', 'timeout', 'error', 'unknown', 'multi',
         'moved',
-        'redirect', 'ok',
+        'redirect', 'http', 'ok',
         'unchecked'
     );
 
@@ -1648,6 +1675,7 @@ BEGIN {
         'multi'     => 'warn',
         'moved'     => 'warn',
         'redirect'  => 'ok',
+        'http'      => 'ok',
         'ok'        => 'ok',
         'unchecked' => 'unchecked',
     );
@@ -1700,6 +1728,12 @@ sub get_code      { return $_[0]->{'code'};     }
 sub get_time      { return $_[0]->{'time'};     }
 sub get_duration  { return $_[0]->{'duration'}; }
 sub get_lastmod   { return $_[0]->{'lastmod'}; }
+
+
+sub set_state {
+    my ($self, $state) = @_;
+    $self->{'state'} = $state;
+}
 
 
 # set location for redirects
