@@ -1252,6 +1252,17 @@ sub html_overview {
     my $u = $self->get_url()->as_string();
     my $ux = substr($u, 0, 60);
 
+    my $location = $self->get_history()->get_location();
+    if ($location ne '') {
+        my $us = $u;
+        $us =~ s/^http:/https:/;
+        if ($u =~ /^http:/ && $location =~ /^https:/ && $us eq $location) {
+            $location = ' => HTTPS'
+        } else {
+            $location = ' => ' . $location;
+        }
+    }
+
     return $xml->tr(
         $xml->td({ 'class' => 'nav' },
             $xml->a({ 'href'  => "page-" . $self->get_unique_id() . ".html", 'class' => 'nav' }, "Details"),
@@ -1266,7 +1277,7 @@ sub html_overview {
         $xml->td(
             $xml->a({'href' => $u, 'class' => 'url' }, $ux),
             ($ux eq $u) ? "" : "...",
-            ($self->get_history()->get_location() eq '') ? '' : ' => ' . $self->get_history()->get_location()
+            $location
         ),
     );
 }
