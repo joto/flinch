@@ -630,7 +630,7 @@ sub do_report {
     print "Cleaning report dir\n" if ($opts{'verbose'});
     opendir(DIR, $dir) or die("Can't open report dir $dir: $!\n");
     foreach my $file (readdir(DIR)) {
-        next unless ($file =~ /^(index|detail-.*)\.html$/);
+        next unless ($file =~ /^(index|page-.*)\.html$/);
         unlink("$dir/$file");
     }
     closedir(DIR);
@@ -1254,7 +1254,7 @@ sub html_overview {
 
     return $xml->tr(
         $xml->td({ 'class' => 'nav' },
-            $xml->a({ 'href'  => "detail-" . $self->get_unique_id() . ".html", 'class' => 'nav' }, "Details"),
+            $xml->a({ 'href'  => "page-" . $self->get_unique_id() . ".html", 'class' => 'nav' }, "Details"),
         ),
         $xml->td({ 'align' => 'middle' },
             $self->get_history()->get_iso_date(),
@@ -1366,7 +1366,7 @@ sub html_details {
         $body,
     );
 
-    my $file = 'detail-' . $self->get_unique_id() . '.html';
+    my $file = 'page-' . $self->get_unique_id() . '.html';
     open(DETAILS, ">$dir/$file") or die("$0: can't open $dir/$file: $!\n");
     print DETAILS "$doctype\n$html\n";
     close(DETAILS);
