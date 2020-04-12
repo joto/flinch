@@ -49,5 +49,5 @@ Place, Suite 330, Boston, MA 02111-1307, USA
 
 ## Author
 
-Written by Jochen Topf <jochen@remote.org>
+Written by Jochen Topf <jochen@topf.org>
 
