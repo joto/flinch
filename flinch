@@ -1724,6 +1724,7 @@ sub code2state {
     return 'multi'     if ($code == 300);    # 300 multiple choices
     return 'moved'     if ($code == 301);    # 301 permanent redirect
     return 'redirect'  if ($code == 302);    # 302 temporary redirect
+    return 'redirect'  if ($code == 307);    # 307 temporary redirect
     return 'moved'     if ($code == 308);    # 308 permanent redirect
     return 'not auth'  if ($code == 401);    # 401 unauthorized
     return 'forbidden' if ($code == 403);    # 403 forbidden
