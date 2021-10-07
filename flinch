@@ -29,6 +29,7 @@
 use XML::Generator;
 use XML::Parser::PerlSAX;
 use HTML::LinkExtor;
+use HTML::HeadParser;
 use LWP::UserAgent;
 use URI;
 use HTTP::Status;
@@ -468,15 +469,27 @@ sub get_page {
         return;
     }
 
+    # get <base href>
+    my $hp = HTML::HeadParser->new;
+    $hp->parse($response->content());
+    my $base = $hp->header('Content-Base');
+    $base =~ s@[^/]+$@@;
+
+    if ($base) {
+        $url = URI->new($base)->abs($url);
+    }
+
     # parse document and get out all links to other documents
     my $p = HTML::LinkExtor->new(undef, $url);
     $p->parse($response->content());
 
     foreach my $element ($p->links()) {
-        shift @$element;
-        my %hash = @$element;
-        foreach my $link (values(%hash)) {
-            handle_link($link, $url);
+        if ($element->[0] ne 'base') {
+            shift @$element;
+            my %hash = @$element;
+            foreach my $link (values(%hash)) {
+                handle_link($link, $url);
+            }
         }
     }
 }
