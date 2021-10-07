@@ -64,6 +64,7 @@ chomp $HOSTNAME;
 my $cfg = Flinch::Config->new(
     'stylesheet'   => 'flinch-style.css',
     'timeout'      => 60,
+    'sleep'        => 0.1,
     'schemes'      => 'http https',
     'useragent'    => "$PROGRAM/$VERSION",
     'warn'         => '3d',
@@ -592,6 +593,11 @@ sub do_check {
             print STDERR "Got SIGHUP. Writing current state to XML file...\n";
             write_project_xml();
             $got_signal_hup = 0;
+        }
+
+        if ($cfg->get_sleep() != 0) {
+            print "Sleeping ", $cfg->get_sleep(), " seconds\n" if ($opts{'verbose'});
+            Time::HiRes::sleep($cfg->get_sleep()); # Sleep to not overload server
         }
     }
 
@@ -1937,7 +1943,7 @@ use vars '@cfgvars';
 
 # define accessor (get_*, set_*) functions
 BEGIN  {
-    @cfgvars = qw( email emailfrom prefix project reportdir reportprefix reporturl schemes startpath stylesheet timeout useragent warn );
+    @cfgvars = qw( email emailfrom prefix project reportdir reportprefix reporturl schemes startpath stylesheet timeout sleep useragent warn );
 
     foreach my $attr (@cfgvars) {
         no strict 'refs';

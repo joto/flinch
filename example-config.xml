@@ -4,6 +4,7 @@
   <config>
     <reportdir> EDIT THIS </reportdir>
     <reporturl> EDIT THIS </reporturl>
+    <sleep>0.1</sleep>
     <timeout>90</timeout>
     <stylesheet>/flinch-style.css</stylesheet>
     <schemes>http ftp</schemes>
