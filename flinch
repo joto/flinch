@@ -80,7 +80,7 @@ my $cfg = Flinch::Config->new(
 #-----------------------------------------------------------------------------
 my $intern; # internal URLs
 
-my %opts = ('verbose' => 0, 'configdir' => $CFGDIR);
+my %opts = ('time' => 0, 'verbose' => 0, 'configdir' => $CFGDIR);
 
 my @standardoptions = ('verbose+', 'configdir=s', 'time=i');
 
