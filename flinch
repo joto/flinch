@@ -246,8 +246,7 @@ sub do_recycle {
 #
 #  do_clean()
 #
-#  This function reads the XML file, parses it and writes it back. It is
-#  mainly used for testing.
+#  This function cleans the request history by removing old entries.
 #
 #-----------------------------------------------------------------------------
 sub do_clean {
