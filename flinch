@@ -473,10 +473,12 @@ sub get_page {
     my $hp = HTML::HeadParser->new;
     $hp->parse($response->content());
     my $base = $hp->header('Content-Base');
-    $base =~ s@[^/]+$@@;
 
     if ($base) {
-        $url = URI->new($base)->abs($url);
+        $base =~ s@[^/]+$@@;
+        if ($base) {
+            $url = URI->new($base)->abs($url);
+        }
     }
 
     # parse document and get out all links to other documents
