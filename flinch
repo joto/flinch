@@ -1214,8 +1214,8 @@ sub set_history { $_[0]->{'history'} = $_[1]; }
 sub set_method  { $_[0]->{'method'}  = $_[1]; }
 sub set_url     { $_[0]->{'url'}     = $_[1]; }
 
-sub get_internal { return $_[0]->{'internal'} ; }
-sub set_internal { $_[0]->{'internal'} = 1    ; }
+sub get_internal { return $_[0]->{'internal'} // 0; }
+sub set_internal { $_[0]->{'internal'} = 1; }
 
 sub flush_ref   { $_[0]->{'ref'}     = {}; }
 
