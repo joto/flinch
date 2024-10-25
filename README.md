@@ -32,7 +32,7 @@ The documentation is
 
 ## License
 
-Copyright © 2001-2020 by Jochen Topf <jochen@topf.org>
+Copyright © 2001-2024 by Jochen Topf <jochen@topf.org>
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
