@@ -1312,7 +1312,7 @@ sub html_overview {
     my ($self, $xml) = @_;
 
     my $u = $self->get_url()->as_string();
-    my $ux = substr($u, 0, 60);
+    my $ux = substr($u, 0, 120);
 
     my $location = $self->get_history()->get_location();
     if (defined $location) {
