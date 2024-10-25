@@ -1315,7 +1315,7 @@ sub html_overview {
     my $ux = substr($u, 0, 60);
 
     my $location = $self->get_history()->get_location();
-    if ($location ne '') {
+    if (defined $location) {
         my $us = $u;
         $us =~ s/^http:/https:/;
         if ($u =~ /^http:/ && $location =~ /^https:/ && $us eq $location) {
@@ -1606,7 +1606,7 @@ sub get_state {
 sub get_location {
     my ($self) = @_;
     my $f = $self->get_list()->[0];
-    return $f ? $f->{'location'} : ''
+    return $f ? $f->{'location'} : undef;
 }
 
 
