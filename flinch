@@ -1204,7 +1204,7 @@ sub get_list    { return values(%list); }
 
 sub get_comment { return $_[0]->{'comment'}; }
 sub get_history { return $_[0]->{'history'}; }
-sub get_method  { return $_[0]->{'method'};  }
+sub get_method  { return $_[0]->{'method'} // 'HEAD'; }
 sub get_url     { return $_[0]->{'url'};     }
 
 sub get_refs    { return keys(%{$_[0]->{'ref'}}); }  # returns array
