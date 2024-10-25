@@ -1363,8 +1363,15 @@ sub html_details {
     my $history = $selfhist->is_empty() ? "not checked yet" :
         $xml->div({ 'class' => 'back' }, $selfhist->html($xml, $prefix));
 
-    my $lastmod = $selfhist->is_empty() ? "not checked yet" :
-        main::isodate($selfhist->get_lastmod()) . " (" . int((time() - $selfhist->get_lastmod()) / (60*60*24)) . " days ago)";
+    my $lastmod;
+
+    if ($selfhist->is_empty()) {
+        $lastmod = "not checked yet";
+    } elsif ($selfhist->get_lastmod()) {
+        $lastmod = main::isodate($selfhist->get_lastmod()) . " (" . int((time() - $selfhist->get_lastmod()) / (60*60*24)) . " days ago)";
+    } else {
+        $lastmod = "unknown";
+    }
 
     my @refs;
     if ($cfg->get_reportprefix()) {
@@ -1763,7 +1770,7 @@ sub get_state     { return $_[0]->{'state'};    }
 sub get_code      { return $_[0]->{'code'};     }
 sub get_time      { return $_[0]->{'time'};     }
 sub get_duration  { return $_[0]->{'duration'}; }
-sub get_lastmod   { return $_[0]->{'lastmod'}; }
+sub get_lastmod   { return $_[0]->{'lastmod'};  }
 
 
 sub set_state {
