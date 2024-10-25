@@ -1001,7 +1001,7 @@ package Flinch::ConfigParser;
 
 sub new {
     my $type = shift;
-    return bless {}, $type;
+    return bless { 'context' => '' }, $type;
 }
 
 
@@ -1025,7 +1025,7 @@ sub end_element {
     my ($self, $args) = @_;
 
     if ($args->{'Name'} eq $self->{'context'}) {
-        delete $self->{'context'};
+        $self->{'context'} = '';
     }
 
     if ($self->{'context'} eq 'config') {
@@ -1062,7 +1062,7 @@ package Flinch::Parser;
 
 sub new {
     my $type = shift;
-    return bless {}, $type;
+    return bless { 'context' => '' }, $type;
 }
 
 
@@ -1100,7 +1100,7 @@ sub end_element {
     my ($self, $args) = @_;
 
     if ($args->{'Name'} eq $self->{'context'}) {
-        delete $self->{'context'};
+        $self->{'context'} = '';
         delete $self->{'link'};
     }
 
