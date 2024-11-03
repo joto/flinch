@@ -38,7 +38,7 @@ use Getopt::Long;
 use Carp;
 
 use strict;
-
+use warnings;
 
 my $CFGDIR  = "$ENV{'HOME'}/.flinch";
 

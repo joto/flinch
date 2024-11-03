@@ -3,7 +3,6 @@ Flinch TODO
 -----------
 
 - report for walk phase?
-- use -w option?
 - cookie support?
   I needed cookies so I added the following line:
 
