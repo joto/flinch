@@ -40,6 +40,10 @@ use Carp;
 use strict;
 use warnings;
 
+use utf8;
+use open qw( :encoding(UTF-8) :std );
+use feature 'unicode_strings';
+
 my $CFGDIR  = "$ENV{'HOME'}/.flinch";
 
 my $VERSION = "1.1.0";
@@ -424,7 +428,6 @@ sub do_request {
     return $agent->simple_request($request);
 }
 
-
 sub get_page {
     my ($ua, $url) = @_;
 
@@ -484,7 +487,7 @@ sub get_page {
     }
 
     # parse document and get out all links to other documents
-    my $p = HTML::LinkExtor->new(undef, $url);
+    my $p = HTML::LinkExtor->new();
     $p->parse($response->decoded_content('default_charset' => 'UTF-8'));
 
     foreach my $element ($p->links()) {
@@ -492,33 +495,41 @@ sub get_page {
             shift @$element;
             my %hash = @$element;
             foreach my $link (values(%hash)) {
+                {
+                    # This decodes the percent-encoding. The "use bytes"
+                    # is necessary because percent-encoding encodes bytes,
+                    # not unicode characters.
+                    use bytes;
+                    $link =~ s/%([a-fA-F0-9]{2})/pack('C', hex($1))/eg;
+                }
                 handle_link($link, $url);
             }
         }
     }
 }
 
-
 sub handle_link {
     my ($link, $url) = @_;
 
-    my $l = $link->as_string();
-
-    print "    LINK $l\n" if ($opts{'verbose'} > 1);
+    print "    LINK $link\n" if ($opts{'verbose'} > 1);
 
     foreach my $skip (Flinch::Skip->list_ignore()) {
-        if ($skip->match($l)) {
-            print "  IGNORE $l\n" if ($opts{'verbose'});
+        if ($skip->match($link)) {
+            print "  IGNORE $link\n" if ($opts{'verbose'});
             return;
         }
     }
 
     my $pre = $cfg->get_prefix();
-    if ($l =~ /^$pre/o) {
-        $l =~ s/\#.*$//;    # remove fragment identifier
-        $intern->push($l, $url);
-    } elsif ($cfg->scheme_ok($link->scheme())) {
-        Flinch::ExternLink->new($l, $url);
+    my $link_url = URI->new($link, $url)->abs($url);
+    my $link_with_base = $link_url->as_string();
+    if ($link_with_base =~ /^$pre/o) {
+        $link_with_base =~ s/\#.*$//;    # remove fragment identifier
+        print "      IS INTERN $link_with_base\n" if ($opts{'verbose'} > 1);
+        $intern->push($link_with_base, $url);
+    } elsif ($cfg->scheme_ok($link_url->scheme())) {
+        print "      IS EXTERN $link_with_base\n" if ($opts{'verbose'} > 1);
+        Flinch::ExternLink->new($link_url, $url);
     }
 }
 
@@ -2016,6 +2027,8 @@ sub check_complete {
 # check scheme against config
 sub scheme_ok {
     my ($self, $scheme) = @_;
+
+    return 0 unless ($scheme);
 
     return ($self->get_schemes() =~ /\b$scheme\b/) ? 1 : 0;
 }
