@@ -1781,11 +1781,11 @@ sub code2state {
 
 
 # accessor functions
-sub get_state     { return $_[0]->{'state'};    }
-sub get_code      { return $_[0]->{'code'};     }
-sub get_time      { return $_[0]->{'time'};     }
-sub get_duration  { return $_[0]->{'duration'}; }
-sub get_lastmod   { return $_[0]->{'lastmod'};  }
+sub get_state     { return $_[0]->{'state'};       }
+sub get_code      { return ($_[0]->{'code'} or 0); }
+sub get_time      { return $_[0]->{'time'};        }
+sub get_duration  { return $_[0]->{'duration'};    }
+sub get_lastmod   { return $_[0]->{'lastmod'};     }
 
 
 sub set_state {
